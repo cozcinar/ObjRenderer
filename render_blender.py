@@ -172,3 +172,5 @@ for i in range(0, args.views):
     bpy.ops.render.render(write_still=True)  # render still
 
     b_empty.rotation_euler[2] += radians(stepsize)
+
+os._exit(0)

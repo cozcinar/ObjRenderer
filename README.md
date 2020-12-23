@@ -8,26 +8,23 @@ Additionally, depth, albedo and normal maps are dumped for every image.
 
 Tested with Blender 2.79.
 
-## Example invocation
+## Requirements
 
-To render a single `.obj` file, run
+```bash
+wget https://download.blender.org/release/Blender2.79/blender-2.79a-linux-glibc219-x86_64.tar.bz2
+tar -xvf blender-2.79-linux-glibc219-x86_64.tar.bz2
 
-    blender --background --python render_blender.py -- --output_folder /tmp path_to_model.obj
+# how to use blender renderer with ssh https://blender.stackexchange.com/questions/144083/how-to-get-blender-2-80-to-render-through-an-ssh-connection-minimal-working-ex
 
-To get raw values that are easiest for further use, use `--format OPEN_EXR`. If the .obj file references any materials defined in a `.mtl` file, it is assumed to be in the same folder with the same name.
-
-## Batch rendering
-
-To render a whole batch, you can e. g. use the unix tool find:
-
-    find . -name *.obj -exec blender --background --python render_blender.py -- --output_folder /tmp {} \;
-
-To speed up the process, you can also use xargs to have multiple blender instances run in parallel using the `-P` argument
-
-    find . -name *.obj -print0 | xargs -0 -n1 -P3 -I {} blender --background --python render_blender.py -- --output_folder /tmp {}
-
-## Example images
-
-Here is one chair model rendered with 30 different views:
-
-![Chairs](examples/out_without_specular.png)
+sudo apt install mesa-utils
+glxinfo
+nvidia-xconfig --query-gpu-info
+#Next, we run this, where I insert the PCI BusID into the --busid argument:
+sudo nvidia-xconfig --busid=PCI:101:0:0 --use-display-device=none --virtual=1280x1024
+# Now, this will be running in one shell. Using CTRL+C will not work to kill it. For your subsequent work, you can use a separate shell.
+sudo Xorg :1
+# this will set the display variable to be what the Xorg command did in the other shell.
+export DISPLAY=:1
+# sanitiy check
+glxinfo | grep -e render -e NVIDIA
+```
